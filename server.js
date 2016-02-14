@@ -13,7 +13,7 @@ var drawingSchema = mongoose.Schema({name: String});
 //intsantiating Drawing (model), drawings (database)
 var Drawing = mongoose.model('Drawing', drawingSchema);
 
-var app= express();
+var app = express();
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(morgan('dev'));
@@ -44,7 +44,7 @@ app.get('/drawings/:id', function (req, res){
 app.post('/drawings', function (req, res){
   //can add a variabe to add and validate properties to the req.body
   // var data = req.body{}
-  //make validations
+  //make validations if name etc
   var newDrawing = new Drawing(req.body);
   console.log('req.body', req.body);
   newDrawing.save();
@@ -55,6 +55,9 @@ app.put('/drawings/:id', function (req, res){
   var drawingId = req.params.id;
   var drawingName = req.body.name;
   //error and success result
+  //via postman changed name value
+  //$set ensures doesn't overwrite everything, including other properties
+  //$set ensures just the name will change
   Drawing.findByIdAndUpdate(drawingId,{$set: {name: drawingName}}, function (err, drawing){
     res.json(drawing);
   });
